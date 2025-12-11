@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { FiLinkedin, FiGithub, FiMail, FiTwitter, FiChevronRight, FiPhone } from 'react-icons/fi'
+import { AnimatePresence } from 'framer-motion'
+import { FiLinkedin, FiGithub, FiMail, FiChevronRight, FiPhone } from 'react-icons/fi'
 import { SiLeetcode } from 'react-icons/si'
 import PreviewPopup from './PreviewPopup'
 
@@ -57,7 +57,7 @@ const LetsConnect = () => {
     const containerRef = useRef(null)
 
     const handleMouseEnter = (link, e) => {
-        // Disable preview on mobile
+        
         if (window.innerWidth < 768) return
 
         // Clear any pending close timer
