@@ -41,23 +41,26 @@ const Home = () => {
 
     const projects = [
         {
-            title: "Pattern Based Auth",
-            description: "A cyberpunk-inspired social hub built with React and Three.js.",
-            image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop",
-            tech: ["React", "material UI"]
-        },
-        {
-            title: "Smart Meds",
-            description: "Procedural space exploration game running in the browser.",
-            image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2022&auto=format&fit=crop",
-            tech: ["React Native", "Expo", "express.js","node.js", "MongoDB","oauth"]
-        },
-        {
-            title: "Memo",
-            description: "A personal memory management application with many feautures to manage our memory",
-            image: "https://picsum.photos/id/237/800/600",
-            tech: ["React Native", "Expo", "express.js","node.js","local storage"]
-        }
+        title: "Pattern Based Auth",
+        description: "A cyberpunk-inspired social hub built with React and Three.js.",
+        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop",
+        tech: ["React", "material UI"],
+        url: "https://patternauthsystem.netlify.app"
+    },
+    {
+        title: "Smart Meds",
+        description: "Procedural space exploration game running in the browser.",
+        image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2022&auto=format&fit=crop",
+        tech: ["React Native", "Expo", "express.js","node.js", "MongoDB","oauth"],
+        url: "https://github.com/ranjith-devop/Smartmeds.git"
+    },
+    {
+        title: "Memo",
+        description: "A personal memory management application with many features to manage our memory",
+        image: "https://picsum.photos/id/237/800/600",
+        tech: ["React Native", "Expo", "express.js","node.js","local storage"],
+        url: "https://github.com/ranjith-devop/Memo.git"
+    }
         
     ]
 
