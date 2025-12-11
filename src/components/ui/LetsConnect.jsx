@@ -86,7 +86,7 @@ const LetsConnect = () => {
         // Delay closing to allow moving to popup
         hoverTimeout.current = setTimeout(() => {
             setActiveLink(null)
-        }, 300)
+        }, 1)
     }
 
     const handlePopupEnter = () => {
