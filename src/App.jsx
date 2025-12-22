@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Header from './components/dom/Header'
 import Home from './components/dom/Home'
 import Cursor from './components/ui/Cursor'

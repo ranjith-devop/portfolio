@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import imgProfile from '../../assets/imgprofile.png'
+import authImage from '../../assets/auth.png'
+import smartmedImage from '../../assets/smartmed.jpg'
+import memoImage from '../../assets/memo.webp'
 
 
 import ProjectCarousel from '../ui/ProjectCarousel'
@@ -10,58 +13,30 @@ import ProfileAvatar from '../ui/ProfileAvatar'
 import LetsConnect from '../ui/LetsConnect'
 
 const Home = () => {
-    const [isAvatarHovered, setIsAvatarHovered] = useState(false)
-    const [showConnectionLine, setShowConnectionLine] = useState(false)
-    const [connectionComplete, setConnectionComplete] = useState(false)
-
-    useEffect(() => {
-        let timer
-        if (isAvatarHovered) {
-            // Start timer to show connection line
-            timer = setTimeout(() => {
-                setShowConnectionLine(true)
-            }, 1000) // 1 second delay
-        } else {
-            // Reset everything
-            setShowConnectionLine(false)
-            setConnectionComplete(false)
-        }
-        return () => clearTimeout(timer)
-    }, [isAvatarHovered])
-
-    // Handle line animation completion
-    useEffect(() => {
-        if (showConnectionLine) {
-            const timer = setTimeout(() => {
-                setConnectionComplete(true)
-            }, 1000) // Match animation duration
-            return () => clearTimeout(timer)
-        }
-    }, [showConnectionLine])
 
     const projects = [
         {
-        title: "Pattern Based Auth",
-        description: "A cyberpunk-inspired social hub built with React and Three.js.",
-        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop",
-        tech: ["React", "material UI"],
-        url: "https://patternauthsystem.netlify.app"
-    },
-    {
-        title: "Smart Meds",
-        description: "Procedural space exploration game running in the browser.",
-        image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2022&auto=format&fit=crop",
-        tech: ["React Native", "Expo", "express.js","node.js", "MongoDB","oauth"],
-        url: "https://github.com/ranjith-devop/Smartmeds.git"
-    },
-    {
-        title: "Memo",
-        description: "A personal memory management application with many features to manage our memory",
-        image: "https://picsum.photos/id/237/800/600",
-        tech: ["React Native", "Expo", "express.js","node.js","local storage"],
-        url: "https://github.com/ranjith-devop/Memo.git"
-    }
-        
+            title: "Pattern Based Auth System",
+            description: "A simple pattern based authentication system which uses a freehand pattern to authenticate users",
+            image: authImage,
+            tech: ["React", "material UI"],
+            url: "https://patternauthsystem.netlify.app"
+        },
+        {
+            title: "Smart Meds",
+            description: "An application which helps users to manage their medications and doctor to patient communication like reports and prescriptions",
+            image: smartmedImage,
+            tech: ["React Native", "Expo", "express.js", "node.js", "MongoDB", "oauth"],
+            url: "https://github.com/ranjith-devop/Smartmeds.git"
+        },
+        {
+            title: "Memo",
+            description: "A personal memory management application with many features to manage our memory",
+            image: memoImage,
+            tech: ["React Native", "Expo", "express.js", "node.js", "local storage"],
+            url: "https://github.com/ranjith-devop/Memo.git"
+        }
+
     ]
 
     return (
@@ -74,73 +49,30 @@ const Home = () => {
                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-[100px] animate-pulse-slow delay-1000"></div>
                 </div>
 
-                {/* Connection Line SVG Layer */}
-                <div className="absolute inset-0 z-20 pointer-events-none hidden md:block">
-                    <svg className="w-full h-full">
-                        {showConnectionLine && (
-                            <path
-                                d="M 800 200 Q 600 200 400 300"
-                                fill="none"
-                                stroke="url(#connection-gradient)"
-                                strokeWidth="4"
-                                strokeLinecap="round"
-                                className="animate-draw-line"
-                            />
-                        )}
-                        <defs>
-                            <linearGradient id="connection-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stopColor="#bc13fe" />
-                                <stop offset="100%" stopColor="#00f3ff" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
+
 
                 <div className="max-w-4xl mt-20 z-10 relative">
                     <div className="mb-6">
-                        <OrbitalName forceHighlight={connectionComplete}>
+                        <OrbitalName>
                             <h1 className="text-7xl md:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-white to-neon-purple animate-gradient-x tracking-tighter p-4">
                                 RANJITH
                             </h1>
                         </OrbitalName>
                     </div>
                     <div className="overflow-hidden">
-                        <p className="text-gray-300 text-xl md:text-2xl max-w-2xl leading-relaxed animate-slide-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
-                            Fullstack Developer & Creative Coder. <br />
-                            <span className="text-neon-pink">Crafting digital experiences</span> with React, Node.js, and advanced CSS magic.
+                        <p className="text-gray-300 text-xl md:text-2xl max-w-3xl leading-relaxed animate-slide-up opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
+                            Aspiring Fullstack Developer <br />
+                            <span className="text-neon-pink">Turning Ideas into Code</span> Turning Code into Impact
                         </p>
                     </div>
                 </div>
 
-                {/* Profile Image - Top Right with CSS Filters */}
+                {/* Profile Image - Top Right */}
                 <div className="relative md:absolute mt-10 md:mt-0 md:top-42 md:right-24 block z-10 mx-auto md:mx-0">
                     <ProfileAvatar
                         src={imgProfile}
                         alt="Ranjith"
-                        onHoverStart={() => setIsAvatarHovered(true)}
-                        onHoverEnd={() => setIsAvatarHovered(false)}
                     />
-
-                    {/* Connection Line Originating from Avatar */}
-                    {showConnectionLine && (
-                        <div className="absolute top-1/2 right-full w-[40vw] h-20 -translate-y-1/2 pointer-events-none hidden md:block">
-                            <svg className="w-full h-full overflow-visible">
-                                <path
-                                    d="M 600 40 C 400 40 200 40 0 80"
-                                    fill="none"
-                                    stroke="url(#connection-gradient-local)"
-                                    strokeWidth="3"
-                                    className="animate-draw-line"
-                                />
-                                <defs>
-                                    <linearGradient id="connection-gradient-local" x1="100%" y1="0%" x2="0%" y2="0%">
-                                        <stop offset="0%" stopColor="#bc13fe" />
-                                        <stop offset="100%" stopColor="#00f3ff" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                    )}
                 </div>
 
                 <div className="absolute bottom-12 left-0 w-full">
@@ -167,12 +99,15 @@ const Home = () => {
                     </p>
                     <div className="flex flex-wrap gap-8 justify-end">
                         {[
+                            { name: 'Java', pct: 80 },
+                            { name: 'Web technologies', pct: 80 },
                             { name: 'React JS', pct: 80 },
-                            { name: 'Tailwind', pct: 90 },
+                            { name: 'Tailwind', pct: 80 },
                             { name: 'Node.js', pct: 80 },
                             { name: 'Express.js', pct: 75 },
-                            { name: 'Mongo DB', pct: 85 },
-                            { name: 'React Native', pct: 70 }
+                            { name: 'Mongo DB', pct: 70 },
+                            { name: 'React Native', pct: 70 },
+                            { name: 'Git', pct: 90 }
                         ].map((skill, i) => (
                             <SkillMeter key={skill.name} skill={skill.name} percentage={skill.pct} />
                         ))}

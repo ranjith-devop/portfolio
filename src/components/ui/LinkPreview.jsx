@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-
 const KNOWN_BLOCKERS = ['linkedin.com', 'github.com', 'twitter.com', 'x.com', 'instagram.com', 'facebook.com', 'leetcode.com']
 
 const LinkPreview = ({ url, title, description, icon: Icon, color }) => {
@@ -14,14 +12,6 @@ const LinkPreview = ({ url, title, description, icon: Icon, color }) => {
             setStatus('fallback')
             setIsBlocked(true)
         } else {
-            // For others, try loading (we can't easily detect X-Frame-Options client-side without proxy, 
-            // so we rely on timeout or just optimistic loading. 
-            // Realistically, most modern sites block iframes. 
-            // We'll set a timeout to switch to fallback if it takes too long or if we want to be safe.)
-
-            // For this demo, let's assume most are blocked and default to fallback for better UX 
-            // unless explicitly whitelisted or if it's a known embeddable URL.
-            // But per requirements, we try iframe.
             setStatus('loading')
         }
     }, [url])

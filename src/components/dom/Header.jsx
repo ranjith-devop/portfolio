@@ -12,8 +12,8 @@ const Header = () => {
             </div>
 
             <nav className="flex gap-6 items-center">
-                
 
+                <a href="/src/assets/ranjithresume.pdf" target="_blank" rel="noopener noreferrer" className="text-white hover:text-neon-pink transition-colors">Resume</a>
                 <a href="#projects" className="text-white hover:text-neon-blue transition-colors">Projects</a>
                 <a href="#about" className="text-white hover:text-neon-purple transition-colors">About</a>
                 <a href="#contact" className="text-white hover:text-neon-pink transition-colors">Contact</a>
