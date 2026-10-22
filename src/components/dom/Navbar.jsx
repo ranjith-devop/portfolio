@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiDownload, FiMenu, FiX, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
+import { FiDownload, FiMenu, FiX, FiGithub, FiLinkedin, FiMail, FiFileText } from 'react-icons/fi'
 
 const NAV_LINKS = [
   { name: 'About', href: '#about' },
+  { name: 'Experience', href: '#experience' },
   { name: 'Projects', href: '#projects' },
   { name: 'Tech Arsenal', href: '#skills' },
   { name: 'Contact', href: '#contact' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ onOpenResume }) {
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -19,7 +20,7 @@ export default function Navbar() {
       setScrolled(window.scrollY > 40)
 
       // Active section spy
-      const sections = ['about', 'projects', 'skills', 'contact']
+      const sections = ['about', 'experience', 'projects', 'skills', 'contact']
       const scrollPos = window.scrollY + 200
 
       for (const section of sections) {
@@ -39,6 +40,13 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const handleResumeClick = (e) => {
+    if (onOpenResume) {
+      e.preventDefault()
+      onOpenResume()
+    }
+  }
+
   return (
     <>
       <header className="fixed top-4 md:top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
@@ -46,7 +54,7 @@ export default function Navbar() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className={`pointer-events-auto flex items-center justify-between gap-6 px-4 md:px-6 py-2.5 rounded-full transition-all duration-300 ${
+          className={`pointer-events-auto flex items-center justify-between gap-4 md:gap-6 px-4 md:px-6 py-2.5 rounded-full transition-all duration-300 ${
             scrolled
               ? 'bg-[#0d1017]/85 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.4)]'
               : 'bg-[#0d1017]/50 backdrop-blur-md border border-white/5'
@@ -55,10 +63,10 @@ export default function Navbar() {
           {/* Logo / Brand Mark */}
           <a
             href="#"
-            className="flex items-center gap-2 group text-white font-semibold tracking-tight text-sm md:text-base pr-2"
+            className="flex items-center gap-2 group text-white font-semibold tracking-tight text-sm md:text-base pr-1 sm:pr-2"
           >
-            <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-aurora-cyan to-aurora-violet flex items-center justify-center text-xs font-bold text-black shadow-sm group-hover:scale-105 transition-transform">
-              RS
+            <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-purple-500 flex items-center justify-center text-xs font-bold text-black shadow-sm group-hover:scale-105 transition-transform">
+              RC
             </span>
             <span className="hidden sm:inline font-bold tracking-wider text-xs md:text-sm bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
               RANJITH
@@ -93,16 +101,14 @@ export default function Navbar() {
           </div>
 
           {/* Action Button: Resume */}
-          <div className="flex items-center gap-3">
-            <a
-              href="/src/assets/ranjithresume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 text-black hover:opacity-95 shadow-md shadow-cyan-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={handleResumeClick}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 text-black hover:opacity-95 shadow-md shadow-cyan-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Resume</span>
-              <FiDownload size={13} />
-            </a>
+              <FiFileText size={13} />
+            </button>
 
             {/* Mobile Hamburger Button */}
             <button
@@ -126,7 +132,7 @@ export default function Navbar() {
             transition={{ duration: 0.2 }}
             className="fixed inset-x-4 top-20 z-40 bg-[#0d1017]/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 shadow-2xl md:hidden"
           >
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.name}
@@ -137,27 +143,45 @@ export default function Navbar() {
                   {link.name}
                 </a>
               ))}
+
+              <div className="pt-2">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    if (onOpenResume) onOpenResume()
+                  }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-cyan-400 to-blue-500 text-black"
+                >
+                  <span>View Updated Resume (PDF & Matrix)</span>
+                  <FiDownload size={15} />
+                </button>
+              </div>
+
               <div className="h-px bg-white/10 my-2" />
+
               <div className="flex justify-around pt-2 text-slate-400">
                 <a
                   href="https://github.com/ranjith-devop"
                   target="_blank"
                   rel="noreferrer"
                   className="p-2 hover:text-cyan-400 transition-colors"
+                  aria-label="GitHub"
                 >
                   <FiGithub size={20} />
                 </a>
                 <a
-                  href="https://linkedin.com/in/ranjith-sakun-2004"
+                  href="https://www.linkedin.com/in/ranjith9597"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 hover:text-cyan-400 transition-colors"
+                  className="p-2 hover:text-blue-400 transition-colors"
+                  aria-label="LinkedIn"
                 >
                   <FiLinkedin size={20} />
                 </a>
                 <a
-                  href="mailto:ranjitran9597@gmail.com"
-                  className="p-2 hover:text-cyan-400 transition-colors"
+                  href="mailto:ranjithshiva22@gmail.com"
+                  className="p-2 hover:text-purple-400 transition-colors"
+                  aria-label="Email"
                 >
                   <FiMail size={20} />
                 </a>

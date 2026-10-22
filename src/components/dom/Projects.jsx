@@ -21,12 +21,12 @@ const ALL_PROJECTS = [
   },
   {
     id: 'smart-meds',
-    title: 'Smart Meds',
-    category: 'Fullstack Mobile App',
+    title: 'Smart Meds — AI Healthcare App',
+    category: 'Fullstack Mobile & AI',
     type: 'mobile',
-    description: 'Healthcare & medication management app enabling real-time prescription tracking, reminder schedules, and secure doctor-to-patient communication.',
+    description: 'Healthcare & medication management app with an integrated conversational AI Chatbot API for real-time prescription assistance, automated reminder schedules, and doctor-patient communication.',
     image: smartmedImage,
-    tech: ['React Native', 'Expo', 'Node.js', 'Express.js', 'MongoDB', 'OAuth'],
+    tech: ['React Native', 'AI Chatbot API', 'Node.js', 'Express.js', 'MongoDB', 'Expo'],
     url: 'https://github.com/ranjith-devop/Smartmeds.git',
     githubUrl: 'https://github.com/ranjith-devop/Smartmeds.git'
   },

@@ -9,7 +9,7 @@ const LINKS = [
     {
         id: 'linkedin',
         label: 'LinkedIn',
-        href: 'https://linkedin.com/in/ranjith-sakun-2004',
+        href: 'https://www.linkedin.com/in/ranjith9597',
         icon: FiLinkedin,
         color: 'text-blue-500',
         description: 'Connect with me on LinkedIn for professional updates and networking.'
@@ -33,7 +33,7 @@ const LINKS = [
     {
         id: 'email',
         label: 'Email',
-        href: 'mailto:ranjitran9597@gmail.com',
+        href: 'mailto:ranjithshiva22@gmail.com',
         icon: FiMail,
         color: 'text-red-500',
         description: 'Shoot me an email for inquiries, collaborations, or just to say hi.',

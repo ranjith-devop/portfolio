@@ -16,8 +16,8 @@ import { SiLeetcode } from 'react-icons/si'
 const SOCIAL_CARDS = [
   {
     name: 'LinkedIn',
-    handle: 'ranjith-sakun-2004',
-    href: 'https://linkedin.com/in/ranjith-sakun-2004',
+    handle: 'in/ranjith9597',
+    href: 'https://www.linkedin.com/in/ranjith9597',
     icon: FiLinkedin,
     color: 'hover:text-blue-400 hover:border-blue-500/40'
   },
@@ -37,7 +37,7 @@ const SOCIAL_CARDS = [
   },
   {
     name: 'Direct Phone',
-    handle: '+91 9597998489',
+    handle: '+91 95979 98489',
     href: 'tel:+919597998489',
     icon: FiPhone,
     color: 'hover:text-emerald-400 hover:border-emerald-500/40'
@@ -50,7 +50,7 @@ export default function Contact() {
   const [formSent, setFormSent] = useState(false)
 
   const copyEmail = () => {
-    navigator.clipboard.writeText('ranjitran9597@gmail.com')
+    navigator.clipboard.writeText('ranjithshiva22@gmail.com')
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
   }
@@ -62,7 +62,7 @@ export default function Contact() {
     // Open mailto with prefilled content
     const subject = encodeURIComponent(`Portfolio Inquiry from ${formState.name}`)
     const body = encodeURIComponent(`Name: ${formState.name}\nEmail: ${formState.email}\n\nMessage:\n${formState.message}`)
-    window.location.href = `mailto:ranjitran9597@gmail.com?subject=${subject}&body=${body}`
+    window.location.href = `mailto:ranjithshiva22@gmail.com?subject=${subject}&body=${body}`
 
     setFormSent(true)
     setTimeout(() => {
@@ -110,7 +110,7 @@ export default function Contact() {
 
             <div className="p-3 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between gap-2 mb-4">
               <span className="text-xs sm:text-sm font-mono text-cyan-300 truncate">
-                ranjitran9597@gmail.com
+                ranjithshiva22@gmail.com
               </span>
               <button
                 onClick={copyEmail}
@@ -131,7 +131,7 @@ export default function Contact() {
             </div>
 
             <a
-              href="mailto:ranjitran9597@gmail.com"
+              href="mailto:ranjithshiva22@gmail.com"
               className="inline-flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors"
             >
               <span>Compose mail directly</span>
