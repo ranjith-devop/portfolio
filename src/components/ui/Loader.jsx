@@ -1,40 +1,36 @@
 import React, { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
-const Loader = () => {
-    const [loading, setLoading] = useState(true)
+export default function Loader() {
+  const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(false)
-        }, 500) // Simulate load time
-        return () => clearTimeout(timer)
-    }, [])
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 450)
+    return () => clearTimeout(timer)
+  }, [])
 
-    if (!loading) return null
+  return (
+    <AnimatePresence>
+      {loading && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[10000] bg-[#08090d] flex flex-col items-center justify-center pointer-events-auto"
+        >
+          <div className="relative w-16 h-16 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border-2 border-cyan-500/20 animate-ping opacity-30" />
+            <div className="w-12 h-12 rounded-full border-2 border-transparent border-t-cyan-400 border-r-purple-500 animate-spin" />
+            <span className="absolute text-xs font-mono font-bold text-white tracking-widest">RS</span>
+          </div>
 
-    return (
-        <div className="fixed inset-0 z-[10000] bg-black flex flex-col items-center justify-center transition-opacity duration-1000" style={{ opacity: loading ? 1 : 0, pointerEvents: loading ? 'auto' : 'none' }}>
-
-            {/* Glowing Ring */}
-            <div className="relative w-32 h-32 mb-12">
-                <div className="absolute inset-0 border-4 border-neon-blue/30 rounded-full animate-spin-slow"></div>
-                <div className="absolute inset-0 border-t-4 border-neon-blue rounded-full animate-spin shadow-[0_0_20px_#00f3ff]"></div>
-            </div>
-
-            {/* Newton's Cradle */}
-            <div className="flex gap-1 items-center justify-center h-20">
-                <div className="w-4 h-4 bg-white rounded-full animate-cradle-left shadow-[0_0_10px_white]"></div>
-                <div className="w-4 h-4 bg-white rounded-full shadow-[0_0_10px_white]"></div>
-                <div className="w-4 h-4 bg-white rounded-full shadow-[0_0_10px_white]"></div>
-                <div className="w-4 h-4 bg-white rounded-full shadow-[0_0_10px_white]"></div>
-                <div className="w-4 h-4 bg-white rounded-full animate-cradle-right shadow-[0_0_10px_white]"></div>
-            </div>
-
-            <div className="mt-8 text-neon-blue font-mono text-sm tracking-[0.5em] animate-pulse">
-                INITIALIZING
-            </div>
-        </div>
-    )
+          <div className="mt-6 text-xs font-mono text-cyan-400 tracking-[0.3em] uppercase animate-pulse">
+            INITIALIZING
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 }
-
-export default Loader
