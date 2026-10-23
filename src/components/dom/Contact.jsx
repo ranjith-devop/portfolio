@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { 
   FiMail, 
   FiPhone, 
@@ -9,9 +9,12 @@ import {
   FiSend, 
   FiLinkedin, 
   FiGithub,
-  FiArrowUp
+  FiArrowUp,
+  FiAlertCircle,
+  FiExternalLink,
+  FiRefreshCw
 } from 'react-icons/fi'
-import { SiLeetcode } from 'react-icons/si'
+import { SiLeetcode, SiGmail } from 'react-icons/si'
 
 const SOCIAL_CARDS = [
   {
@@ -47,7 +50,11 @@ const SOCIAL_CARDS = [
 export default function Contact() {
   const [copied, setCopied] = useState(false)
   const [formState, setFormState] = useState({ name: '', email: '', message: '' })
-  const [formSent, setFormSent] = useState(false)
+  const [service, setService] = useState('gmail') // 'gmail' | 'mailto' | 'outlook'
+  const [formStatus, setFormStatus] = useState(null) // null | 'success' | 'error'
+  const [errorMessage, setErrorMessage] = useState('')
+  const [lastSubmission, setLastSubmission] = useState(null)
+  const [copiedMessage, setCopiedMessage] = useState(false)
 
   const copyEmail = () => {
     navigator.clipboard.writeText('ranjithshiva22@gmail.com')
@@ -57,18 +64,68 @@ export default function Contact() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
-    if (!formState.name || !formState.email || !formState.message) return
+    
+    if (!formState.name.trim() || !formState.email.trim() || !formState.message.trim()) {
+      setErrorMessage('Please fill in your name, email, and message before sending.')
+      setFormStatus('error')
+      return
+    }
 
-    // Open mailto with prefilled content
-    const subject = encodeURIComponent(`Portfolio Inquiry from ${formState.name}`)
-    const body = encodeURIComponent(`Name: ${formState.name}\nEmail: ${formState.email}\n\nMessage:\n${formState.message}`)
-    window.location.href = `mailto:ranjithshiva22@gmail.com?subject=${subject}&body=${body}`
+    setErrorMessage('')
 
-    setFormSent(true)
-    setTimeout(() => {
-      setFormSent(false)
-      setFormState({ name: '', email: '', message: '' })
-    }, 4000)
+    const recipient = 'ranjithshiva22@gmail.com'
+    const subject = `Portfolio Inquiry from ${formState.name.trim()}`
+    const body = `Hi Ranjith,\n\n${formState.message.trim()}\n\n---\nSender Name: ${formState.name.trim()}\nSender Email: ${formState.email.trim()}`
+
+    const encodedSubject = encodeURIComponent(subject)
+    const encodedBody = encodeURIComponent(body)
+
+    let targetUrl = ''
+    let serviceLabel = 'Gmail'
+
+    if (service === 'gmail') {
+      targetUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipient}&su=${encodedSubject}&body=${encodedBody}`
+      serviceLabel = 'Gmail'
+      window.open(targetUrl, '_blank', 'noopener,noreferrer')
+    } else if (service === 'outlook') {
+      targetUrl = `https://outlook.live.com/mail/0/deeplink/compose?to=${recipient}&subject=${encodedSubject}&body=${encodedBody}`
+      serviceLabel = 'Outlook Web'
+      window.open(targetUrl, '_blank', 'noopener,noreferrer')
+    } else {
+      targetUrl = `mailto:${recipient}?subject=${encodedSubject}&body=${encodedBody}`
+      serviceLabel = 'Default Mail App'
+      const link = document.createElement('a')
+      link.href = targetUrl
+      link.target = '_blank'
+      link.rel = 'noopener noreferrer'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+
+    setLastSubmission({
+      url: targetUrl,
+      serviceLabel,
+      recipient,
+      subject,
+      body
+    })
+    setFormStatus('success')
+  }
+
+  const copyFormattedMessage = () => {
+    if (!lastSubmission) return
+    const textToCopy = `To: ${lastSubmission.recipient}\nSubject: ${lastSubmission.subject}\n\n${lastSubmission.body}`
+    navigator.clipboard.writeText(textToCopy)
+    setCopiedMessage(true)
+    setTimeout(() => setCopiedMessage(false), 2500)
+  }
+
+  const resetForm = () => {
+    setFormState({ name: '', email: '', message: '' })
+    setFormStatus(null)
+    setLastSubmission(null)
+    setErrorMessage('')
   }
 
   const scrollToTop = () => {
@@ -105,7 +162,7 @@ export default function Contact() {
 
             <h3 className="text-xl font-bold text-white mb-2">Direct Email</h3>
             <p className="text-slate-400 text-xs sm:text-sm mb-6">
-              Fastest way to get in touch. Click to copy or open in your email client.
+              Fastest way to get in touch. Click to copy, launch directly in Gmail, or open your mail app.
             </p>
 
             <div className="p-3 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between gap-2 mb-4">
@@ -130,13 +187,27 @@ export default function Contact() {
               </button>
             </div>
 
-            <a
-              href="mailto:ranjithshiva22@gmail.com"
-              className="inline-flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors"
-            >
-              <span>Compose mail directly</span>
-              <FiArrowUpRight size={14} />
-            </a>
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=ranjithshiva22@gmail.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors"
+              >
+                <SiGmail size={13} />
+                <span>Open in Gmail</span>
+                <FiArrowUpRight size={13} />
+              </a>
+              <span className="text-slate-600 text-xs">•</span>
+              <a
+                href="mailto:ranjithshiva22@gmail.com"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                <FiMail size={13} />
+                <span>Mail App</span>
+                <FiArrowUpRight size={13} />
+              </a>
+            </div>
           </div>
 
           {/* Social Profiles Grid */}
@@ -170,10 +241,30 @@ export default function Contact() {
             className="p-8 rounded-2xl glass-panel flex flex-col justify-between h-full border border-white/10"
           >
             <div>
-              <h3 className="text-xl font-bold text-white mb-2">Send a Message</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xl font-bold text-white">Send a Message</h3>
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  Direct Compose
+                </span>
+              </div>
               <p className="text-slate-400 text-sm mb-6">
-                Fill in your details below and hit send to connect directly.
+                Fill in your details below. Clicking send will open your chosen email client with the message pre-filled.
               </p>
+
+              {/* Error Alert */}
+              <AnimatePresence>
+                {errorMessage && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2"
+                  >
+                    <FiAlertCircle size={16} className="shrink-0" />
+                    <span>{errorMessage}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <div className="space-y-4">
                 <div>
@@ -185,7 +276,10 @@ export default function Contact() {
                     required
                     placeholder="e.g. John Doe"
                     value={formState.name}
-                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                    onChange={(e) => {
+                      setFormState({ ...formState, name: e.target.value })
+                      if (errorMessage) setErrorMessage('')
+                    }}
                     className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/60 text-white placeholder-slate-500 text-sm outline-none transition-colors"
                   />
                 </div>
@@ -199,7 +293,10 @@ export default function Contact() {
                     required
                     placeholder="e.g. john@example.com"
                     value={formState.email}
-                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    onChange={(e) => {
+                      setFormState({ ...formState, email: e.target.value })
+                      if (errorMessage) setErrorMessage('')
+                    }}
                     className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/60 text-white placeholder-slate-500 text-sm outline-none transition-colors"
                   />
                 </div>
@@ -213,30 +310,139 @@ export default function Contact() {
                     required
                     placeholder="Tell me about your project, team, or opportunity..."
                     value={formState.message}
-                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    onChange={(e) => {
+                      setFormState({ ...formState, message: e.target.value })
+                      if (errorMessage) setErrorMessage('')
+                    }}
                     className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/60 text-white placeholder-slate-500 text-sm outline-none transition-colors resize-none"
                   />
+                </div>
+
+                {/* Email Service Selector */}
+                <div className="pt-2 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-slate-300">
+                    <span>Send Using</span>
+                    <span className="text-[11px] text-cyan-400 font-sans normal-case">
+                      {service === 'gmail' && 'Opens Gmail in browser (Recommended)'}
+                      {service === 'mailto' && 'Opens system mail client (Outlook / Apple Mail)'}
+                      {service === 'outlook' && 'Opens Outlook.com in browser'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setService('gmail')}
+                      className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border text-xs font-medium transition-all ${
+                        service === 'gmail'
+                          ? 'bg-rose-500/15 border-rose-500/50 text-white shadow-sm shadow-rose-500/20'
+                          : 'bg-black/30 border-white/5 text-slate-400 hover:text-slate-200 hover:border-white/10'
+                      }`}
+                    >
+                      <SiGmail className={service === 'gmail' ? 'text-rose-400' : 'text-slate-400'} size={14} />
+                      <span>Gmail</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setService('mailto')}
+                      className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border text-xs font-medium transition-all ${
+                        service === 'mailto'
+                          ? 'bg-cyan-500/15 border-cyan-500/50 text-white shadow-sm shadow-cyan-500/20'
+                          : 'bg-black/30 border-white/5 text-slate-400 hover:text-slate-200 hover:border-white/10'
+                      }`}
+                    >
+                      <FiMail className={service === 'mailto' ? 'text-cyan-400' : 'text-slate-400'} size={14} />
+                      <span>Mail App</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setService('outlook')}
+                      className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border text-xs font-medium transition-all ${
+                        service === 'outlook'
+                          ? 'bg-blue-500/15 border-blue-500/50 text-white shadow-sm shadow-blue-500/20'
+                          : 'bg-black/30 border-white/5 text-slate-400 hover:text-slate-200 hover:border-white/10'
+                      }`}
+                    >
+                      <FiSend className={service === 'outlook' ? 'text-blue-400' : 'text-slate-400'} size={14} />
+                      <span>Outlook</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* Actions / Success State */}
             <div className="mt-8 pt-4">
-              <button
-                type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 hover:brightness-110 shadow-lg shadow-cyan-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
-              >
-                {formSent ? (
-                  <>
-                    <FiCheck size={18} />
-                    <span>Opening Mail Client...</span>
-                  </>
+              <AnimatePresence mode="wait">
+                {formStatus === 'success' && lastSubmission ? (
+                  <motion.div
+                    key="success-banner"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-slate-200 space-y-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                        <FiCheck size={18} />
+                        <span>Opening in {lastSubmission.serviceLabel}...</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={resetForm}
+                        className="text-xs text-slate-400 hover:text-white inline-flex items-center gap-1 transition-colors"
+                      >
+                        <FiRefreshCw size={12} />
+                        <span>New Message</span>
+                      </button>
+                    </div>
+
+                    <p className="text-xs text-slate-300">
+                      If your browser blocked the new tab or the mail client didn't launch:
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <a
+                        href={lastSubmission.url}
+                        target={service === 'mailto' ? '_self' : '_blank'}
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold border border-emerald-500/40 transition-colors"
+                      >
+                        <FiExternalLink size={13} />
+                        <span>Click to Open {lastSubmission.serviceLabel}</span>
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={copyFormattedMessage}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white text-xs font-medium border border-white/10 transition-colors"
+                      >
+                        {copiedMessage ? (
+                          <>
+                            <FiCheck size={13} className="text-emerald-400" />
+                            <span className="text-emerald-400">Copied to Clipboard!</span>
+                          </>
+                        ) : (
+                          <>
+                            <FiCopy size={13} />
+                            <span>Copy Message</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </motion.div>
                 ) : (
-                  <>
+                  <motion.button
+                    key="submit-btn"
+                    type="submit"
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 hover:brightness-110 shadow-lg shadow-cyan-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  >
                     <span>Send Message</span>
                     <FiSend size={16} />
-                  </>
+                  </motion.button>
                 )}
-              </button>
+              </AnimatePresence>
             </div>
           </form>
         </div>
@@ -245,7 +451,7 @@ export default function Contact() {
       {/* Footer Bottom Bar */}
       <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
         <div className="flex items-center gap-2">
-          <span>© {new Date().getFullYear()} Ranjith. Built with modern React & Three.js.</span>
+          <span>© {new Date().getFullYear()} Ranjith. Built with knowledge.</span>
         </div>
 
         <button
